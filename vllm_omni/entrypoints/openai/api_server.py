@@ -1569,6 +1569,7 @@ async def generate_images(request: ImageGenerationRequest, raw_request: Request)
             extra_args["system_prompt"] = request.system_prompt
         if request.bot_task is not None:
             extra_args["bot_task"] = request.bot_task
+        extra_args["use_prompt_upscaling"] = request.use_prompt_upscaling
         if extra_args:
             gen_params.extra_args = extra_args
         # Parse per-request LoRA (compatible with chat's extra_body.lora shape).

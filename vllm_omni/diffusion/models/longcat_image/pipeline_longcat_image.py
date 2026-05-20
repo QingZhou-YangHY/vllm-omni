@@ -517,7 +517,7 @@ class LongCatImagePipeline(nn.Module, CFGParallelMixin, DiffusionPipelineProfile
             if req.sampling_params.num_outputs_per_prompt is not None
             else num_images_per_prompt
         )
-        should_rewrite = do_prompt_upscaling(req, self.od_config)
+        should_rewrite = do_prompt_upscaling(req)
         enable_cfg_renorm = req.sampling_params.extra_args.get("enable_cfg_renorm", enable_cfg_renorm)
         cfg_renorm_min = req.sampling_params.extra_args.get("cfg_renorm_min", cfg_renorm_min)
 
