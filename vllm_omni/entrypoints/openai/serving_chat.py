@@ -392,6 +392,7 @@ class OmniOpenAIServingChat(OpenAIServingChat, AudioMixin):
                 negative_prompt = extra_body.get("negative_prompt")
                 cfg_text_scale = extra_body.get("cfg_text_scale")
                 cfg_img_scale = extra_body.get("cfg_img_scale")
+                use_prompt_upscaling = extra_body.get("use_prompt_upscaling")
 
                 engine_prompt_image: dict[str, Any] | None = None
                 if reference_images:
@@ -504,6 +505,8 @@ class OmniOpenAIServingChat(OpenAIServingChat, AudioMixin):
                             sp.extra_args["cfg_text_scale"] = cfg_text_scale
                         if cfg_img_scale is not None:
                             sp.extra_args["cfg_img_scale"] = cfg_img_scale
+                        if use_prompt_upscaling is not None:
+                            sp.extra_args["use_prompt_upscaling"] = use_prompt_upscaling
                         for _key in self._get_diffusion_extra_body_params():
                             _val = extra_body.get(_key)
                             if _val is not None:
@@ -2621,6 +2624,7 @@ class OmniOpenAIServingChat(OpenAIServingChat, AudioMixin):
             true_cfg_scale = extra_body.get("true_cfg_scale") or extra_body.get("cfg_scale")
             cfg_text_scale = extra_body.get("cfg_text_scale")
             cfg_img_scale = extra_body.get("cfg_img_scale")
+            use_prompt_upscaling = extra_body.get("use_prompt_upscaling")
             seed = extra_body.get("seed")
             if seed is None:
                 seed = getattr(request, "seed", None)
@@ -2681,6 +2685,8 @@ class OmniOpenAIServingChat(OpenAIServingChat, AudioMixin):
                 gen_params.extra_args["cfg_text_scale"] = cfg_text_scale
             if cfg_img_scale is not None:
                 gen_params.extra_args["cfg_img_scale"] = cfg_img_scale
+            if use_prompt_upscaling is not None:
+                gen_params.extra_args["use_prompt_upscaling"] = use_prompt_upscaling
             for _key in self._get_diffusion_extra_body_params():
                 _val = extra_body.get(_key)
                 if _val is not None:

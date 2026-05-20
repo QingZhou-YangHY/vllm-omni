@@ -1529,6 +1529,8 @@ async def generate_images(request: ImageGenerationRequest, raw_request: Request)
                 extra_body["guidance_scale"] = request.guidance_scale
             if request.true_cfg_scale is not None:
                 extra_body["true_cfg_scale"] = request.true_cfg_scale
+            if request.use_prompt_upscaling is not None:
+                extra_body["use_prompt_upscaling"] = request.use_prompt_upscaling
             if request.generator_device is not None:
                 extra_body["generator_device"] = request.generator_device
             if request.lora is not None:
