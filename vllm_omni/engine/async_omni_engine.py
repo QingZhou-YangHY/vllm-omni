@@ -1940,6 +1940,7 @@ class AsyncOmniEngine:
                 "mp" if kwargs.get("distributed_executor_backend") is None else kwargs["distributed_executor_backend"]
             ),
             "enable_sleep_mode": kwargs.get("enable_sleep_mode", False),
+            "enable_external_prompt_upscaler": kwargs.get("enable_external_prompt_upscaler", False),
             "enable_multithread_weight_load": kwargs.get("enable_multithread_weight_load", True),
             "num_weight_load_threads": kwargs.get("num_weight_load_threads", 4),
             "quantization": kwargs.get("quantization", None),
