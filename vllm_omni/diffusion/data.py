@@ -590,6 +590,11 @@ class OmniDiffusionConfig:
     # sleep mode
     enable_sleep_mode: bool = False
 
+    # Allow lazy-loading external prompt upscaler models, e.g., in Ernie Image.
+    # This is disabled by default to ensure that if prompt scaling is not desired
+    # in low resource environments, we don't try to lazily load it and OOM.
+    enable_external_prompt_upscaler: bool = False
+
     # Maximum number of sequences to generate in a batch
     max_num_seqs: int = 1
 
