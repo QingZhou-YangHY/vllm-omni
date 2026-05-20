@@ -590,6 +590,11 @@ class OmniDiffusionConfig:
     # sleep mode
     enable_sleep_mode: bool = False
 
+    # Whether or not the Diffusion model should allow prompt upscaling;
+    # If enabled, we may load the text upscaler on the first call it is
+    # needed. If it's disabled, the text upscaler is always skipped.
+    enable_prompt_upscaling: bool = True
+
     # Maximum number of sequences to generate in a batch
     max_num_seqs: int = 1
 

@@ -30,6 +30,7 @@ from vllm_omni.diffusion.model_loader.diffusers_loader import DiffusersPipelineL
 from vllm_omni.diffusion.models.longcat_image.longcat_image_transformer import LongCatImageTransformer2DModel
 from vllm_omni.diffusion.profiler.diffusion_pipeline_profiler import DiffusionPipelineProfilerMixin
 from vllm_omni.diffusion.request import OmniDiffusionRequest
+from vllm_omni.diffusion.utils.prompt_utils import do_prompt_upscaling
 from vllm_omni.model_executor.model_loader.weight_utils import (
     download_weights_from_hf_specific,
 )
@@ -494,7 +495,6 @@ class LongCatImagePipeline(nn.Module, CFGParallelMixin, DiffusionPipelineProfile
         joint_attention_kwargs: dict[str, Any] | None = None,
         enable_cfg_renorm: bool | None = True,
         cfg_renorm_min: float | None = 0.0,
-        enable_prompt_rewrite: bool | None = True,
     ) -> DiffusionOutput:
         # TODO: In online mode, sometimes it receives [{"negative_prompt": None}, {...}], so cannot use .get("...", "")
         # TODO: May be some data formatting operations on the API side. Hack for now.
@@ -517,7 +517,7 @@ class LongCatImagePipeline(nn.Module, CFGParallelMixin, DiffusionPipelineProfile
             if req.sampling_params.num_outputs_per_prompt is not None
             else num_images_per_prompt
         )
-        enable_prompt_rewrite = req.sampling_params.extra_args.get("enable_prompt_rewrite", enable_prompt_rewrite)
+        should_rewrite = do_prompt_upscaling(req, self.od_config)
         enable_cfg_renorm = req.sampling_params.extra_args.get("enable_cfg_renorm", enable_cfg_renorm)
         cfg_renorm_min = req.sampling_params.extra_args.get("cfg_renorm_min", cfg_renorm_min)
 
@@ -558,7 +558,7 @@ class LongCatImagePipeline(nn.Module, CFGParallelMixin, DiffusionPipelineProfile
             batch_size = prompt_embeds.shape[0]
 
         device = self.device
-        if enable_prompt_rewrite and prompt is not None:
+        if should_rewrite and prompt is not None:
             prompt = self.rewire_prompt(prompt if isinstance(prompt, list) else [prompt], device)
 
         negative_prompt = "" if negative_prompt is None else negative_prompt
