@@ -393,6 +393,12 @@ class OmniOpenAIServingChat(OpenAIServingChat, AudioMixin):
                 cfg_text_scale = extra_body.get("cfg_text_scale")
                 cfg_img_scale = extra_body.get("cfg_img_scale")
                 use_prompt_upscaling = extra_body.get("use_prompt_upscaling")
+                # TODO (Alex): Make extra body validation common & validate all extra body params
+                if use_prompt_upscaling is not None and not isinstance(use_prompt_upscaling, bool):
+                    return self._create_error_response(
+                        f"use_prompt_upscaling must be a bool, got {type(use_prompt_upscaling).__name__}",
+                        status_code=400,
+                    )
 
                 engine_prompt_image: dict[str, Any] | None = None
                 if reference_images:
@@ -2625,6 +2631,12 @@ class OmniOpenAIServingChat(OpenAIServingChat, AudioMixin):
             cfg_text_scale = extra_body.get("cfg_text_scale")
             cfg_img_scale = extra_body.get("cfg_img_scale")
             use_prompt_upscaling = extra_body.get("use_prompt_upscaling")
+            # TODO (Alex): Make extra body validation common & validate all extra body params
+            if use_prompt_upscaling is not None and not isinstance(use_prompt_upscaling, bool):
+                return self._create_error_response(
+                    f"use_prompt_upscaling must be a bool, got {type(use_prompt_upscaling).__name__}",
+                    status_code=400,
+                )
             seed = extra_body.get("seed")
             if seed is None:
                 seed = getattr(request, "seed", None)
