@@ -943,6 +943,7 @@ class Flux2Pipeline(nn.Module, CFGParallelMixin, SupportImageInput, ProgressBarM
                 prompt,
                 images=upsample_images,
                 device=device,
+                generator=generator,
             )
         prompt_embeds, text_ids = self.encode_prompt(
             prompt=prompt,
