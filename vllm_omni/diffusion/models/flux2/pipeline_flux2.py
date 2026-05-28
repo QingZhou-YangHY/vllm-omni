@@ -641,6 +641,7 @@ class Flux2Pipeline(nn.Module, CFGParallelMixin, SupportImageInput, ProgressBarM
         images: list[PIL.Image.Image] | list[list[PIL.Image.Image]] = None,
         temperature: float = 0.15,
         device: torch.device = None,
+        generator: torch.Generator | None = None,
     ) -> list[str]:
         if images:
             images = _validate_and_process_images(images, self.image_processor, self.upsampling_max_image_size)
@@ -649,6 +650,7 @@ class Flux2Pipeline(nn.Module, CFGParallelMixin, SupportImageInput, ProgressBarM
             images=images,
             temperature=temperature,
             device=device,
+            generator=generator,
         )
 
     def encode_prompt(
@@ -951,7 +953,9 @@ class Flux2Pipeline(nn.Module, CFGParallelMixin, SupportImageInput, ProgressBarM
 
         # 3. prepare text embeddings
         if caption_upsample_temperature:
-            prompt = self.upsample_prompt(prompt, images=image, temperature=caption_upsample_temperature, device=device)
+            prompt = self.upsample_prompt(
+                prompt, images=image, temperature=caption_upsample_temperature, device=device, generator=generator
+            )
         prompt_embeds, text_ids = self.encode_prompt(
             prompt=prompt,
             prompt_embeds=prompt_embeds,
